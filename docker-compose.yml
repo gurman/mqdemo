@@ -1,0 +1,41 @@
+version: '3.1'
+
+services:
+    mq:
+        image: rabbitmq:alpine
+
+    publisher:
+        build:
+            context: ./docker
+            dockerfile: PhpDockerfile
+        volumes:
+            - ./src:/var/www/app
+
+    consumer1:
+        build:
+            context: ./docker
+            dockerfile: PhpDockerfile
+        environment:
+            SERVICE_ROLE: "Consumer1"
+        volumes:
+            - ./src:/var/www/app
+        command: ./start.sh
+
+    consumer2:
+        build:
+            context: ./docker
+            dockerfile: PhpDockerfile
+        environment:
+            SERVICE_ROLE: "Consumer2"
+        volumes:
+            - ./src:/var/www/app
+        command: ./start.sh
+
+    web:
+        build:
+            context: ./docker
+            dockerfile: WebDockerfile
+        ports:
+            - 80:80
+        volumes:
+            - ./src:/var/www/app

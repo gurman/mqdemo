@@ -1,0 +1,12 @@
+FROM php:fpm-alpine
+
+RUN apk update && apk upgrade \
+  && apk add --no-cache \
+    php7-bcmath \
+  && docker-php-ext-install -j$(getconf _NPROCESSORS_ONLN) \
+    bcmath
+
+
+VOLUME ["/var/www/app"]
+
+WORKDIR /var/www/app
