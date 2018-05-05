@@ -1,8 +1,21 @@
 version: '3.1'
 
 services:
-    mq:
-        image: rabbitmq:alpine
+    zookeeper:
+        image: wurstmeister/zookeeper
+        ports:
+            - "2181:2181"
+    kafka:
+        image: wurstmeister/kafka
+        ports:
+            - "9092:9092"
+        environment:
+            KAFKA_ADVERTISED_HOST_NAME: kafka
+            KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'false'
+            KAFKA_CREATE_TOPICS: "logs:3:1"
+            KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
 
     publisher:
         build:
